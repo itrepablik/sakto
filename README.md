@@ -11,3 +11,5 @@ This is some of the few examples on how to use this package.
 ```
 
 ```
+# License
+Code is distributed under MIT license, feel free to use it in your proprietary projects as well.
