@@ -4,8 +4,11 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
+	"strings"
 	"time"
 
+	"github.com/dustin/go-humanize"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -60,4 +63,37 @@ func GetIP(r *http.Request) string {
 		return forwarded
 	}
 	return r.RemoteAddr
+}
+
+// TimeParseToString parses the time.Time with specific date and time format.
+func TimeParseToString(strDT, dateTimeFormat string) (string, error) {
+	i, err := strconv.ParseInt(strDT, 10, 64)
+	if err != nil {
+		return "", err
+	}
+	tm := time.Unix(i, 0)
+	fCreatedDate, _ := time.Parse(dateTimeFormat, tm.Format(dateTimeFormat))
+	return fCreatedDate.Format(dateTimeFormat), nil
+}
+
+// ParseFloatToString parses any float value, options: bitSize either (32 or 64) with decimal value.
+// Ideal for any pricing or financial amount values.
+func ParseFloatToString(strInt string, bitSize, decimals int) (string, error) {
+	numVal, err := strconv.ParseFloat(strInt, bitSize)
+	if err != nil {
+		return "", err
+	}
+	return humanize.CommafWithDigits(numVal, decimals), nil
+}
+
+// TrimQ removes the trailing double quotes ("") from a string.
+func TrimQ(cleanStr string) string {
+	cleanStr = strings.TrimSpace(cleanStr)
+	if len(cleanStr) > 0 && cleanStr[0] == '"' {
+		cleanStr = cleanStr[1:]
+	}
+	if len(cleanStr) > 0 && cleanStr[len(cleanStr)-1] == '"' {
+		cleanStr = cleanStr[:len(cleanStr)-1]
+	}
+	return cleanStr
 }
