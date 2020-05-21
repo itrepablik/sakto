@@ -12,6 +12,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const _defaultTimeZone = "UTC"
+
 // HashAndSalt is to hash user's password using bycrypt in Go.
 func HashAndSalt(pwd []byte) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
@@ -96,4 +98,12 @@ func TrimQ(cleanStr string) string {
 		cleanStr = cleanStr[:len(cleanStr)-1]
 	}
 	return cleanStr
+}
+
+// LocalNow gets the current local time with localize timezone
+func LocalNow(tz string) time.Time {
+	if len(strings.TrimSpace(tz)) == 0 {
+		tz = _defaultTimeZone
+	}
+	return GetCurDT(time.Now(), tz)
 }
