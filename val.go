@@ -3,6 +3,7 @@ package sakto
 import (
 	"net/http"
 	"net/url"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -106,4 +107,13 @@ func LocalNow(tz string) time.Time {
 		tz = _defaultTimeZone
 	}
 	return GetCurDT(time.Now(), tz)
+}
+
+// IsFileExist checks if the file existed or not
+func IsFileExist(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
 }
